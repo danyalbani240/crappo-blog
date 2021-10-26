@@ -1,0 +1,16 @@
+{
+  "posts": [
+    {
+      "title": "Ragnar is King Now ",
+      "body": "hale earl ragnar ..................................... hale earl ragnar",
+      "tags": ["ui", "ux", "front-end"],
+      "id": 1
+    },
+    {
+      "title": "winter  is Coming",
+      "body": "Game of Thrones .................................... Game Of Thrones",
+      "tags": ["ui", "ux", "back-end"],
+      "id": 2
+    }
+  ]
+}
