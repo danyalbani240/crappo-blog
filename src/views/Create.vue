@@ -38,6 +38,7 @@ import Input from "../components/input.vue";
 import TagsInput from "../components/TagsInput";
 import Button from "../components/Button";
 import axios from "axios";
+import { useRouter } from "vue-router";
 export default {
   components: {
     Input,
@@ -48,6 +49,7 @@ export default {
     const title = ref("");
     const postBody = ref("");
     const tags = ref([]);
+    const router = useRouter();
     const updateTags = (e) => {
       tags.value.push(e);
     };
@@ -63,6 +65,10 @@ export default {
         })
         .catch(function(error) {
           console.log(error);
+        })
+        .finally(() => {
+          console.log("hell");
+          router.push({ name: "Home" });
         });
     };
     return { title, postBody, tags, updateTags, handleSubmit };
