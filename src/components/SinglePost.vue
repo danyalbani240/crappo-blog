@@ -11,13 +11,14 @@
     </router-link>
 
     <div class="flex mt-5 w-full justify-around">
-      <p
+      <router-link
+        :to="{ name: 'Tags', params: { tag } }"
         class="bg-green-500 text-white rounded-lg py-2 px-5 cursor-pointer hover:bg-green-700 transition-all"
         v-for="tag in post.tags"
         :key="tag"
       >
         {{ tag }}
-      </p>
+      </router-link>
     </div>
   </div>
 </template>
