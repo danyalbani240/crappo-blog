@@ -1,6 +1,6 @@
 <template>
   <div>
-    detail {{ id }}
+    <div class="text-Neutral-Red" v-if="error">{{ error }}</div>
     <div v-if="postDetails">
       <h1 class="text-4xl">{{ postDetails.title }}</h1>
       <p>{{ postDetails.body }}</p>
@@ -11,25 +11,37 @@
       >
         #{{ tag }}
       </p>
+      <div>
+        <button @click="deletePost">Delete</button>
+      </div>
     </div>
-    <div v-else>Loading...</div>
+    <div v-if="!error && postDetails == false">Loading...</div>
   </div>
 </template>
 
 <script>
 import { onMounted, ref } from "@vue/runtime-core";
-import getData from "../composables/getData";
+import loadPost from "../composables/getPost";
+import { projectFirestore } from "../firebase/config";
+import { useRouter } from "vue-router";
 export default {
   props: ["id"],
 
   setup(props) {
     let postDetails = ref(null);
-
+    const error = ref(null);
+    const router = useRouter();
     onMounted(() => {
-      getData(`http://localhost:3000/posts/${props.id}`, postDetails);
+      loadPost(props.id, postDetails, error);
     });
-
-    return { postDetails };
+    const deletePost = async () => {
+      await projectFirestore
+        .collection("articles")
+        .doc(props.id)
+        .delete();
+      router.push({ name: "Home" });
+    };
+    return { postDetails, error, deletePost };
   },
 };
 </script>
