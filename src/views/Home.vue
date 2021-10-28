@@ -4,6 +4,7 @@
     <div v-if="error">{{ error }}</div>
     <div v-if="posts.length">
       <PostList :posts="posts" />
+      <TagCloud :posts="posts" />
     </div>
     <div v-else>Loading..</div>
   </div>
@@ -12,16 +13,18 @@
 <script>
 import { onMounted, ref } from "vue";
 import PostList from "../components/PostList";
-import loadData from "../composables/getData";
+import TagCloud from "../components/TagCloud";
+
+import loadPosts from "../composables/getPosts";
 export default {
-  components: { PostList },
+  components: { PostList, TagCloud },
   name: "Home",
   setup() {
     const posts = ref([]);
     const error = ref(null);
 
     onMounted(() => {
-      loadData("http://localhost:3000/posts", posts);
+      loadPosts(posts);
     });
     return { posts, error };
   },
