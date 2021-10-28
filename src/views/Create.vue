@@ -11,10 +11,10 @@
         placeholderWhite
       />
       <div class="flex flex-col items-center my-10">
-        <label for="body">post Body</label>
+        <label for="body">body</label>
         <textarea
           required
-          v-model="postBody"
+          v-model="body"
           placeholder="enter the post things"
           id="body"
         ></textarea>
@@ -29,6 +29,7 @@
       <p v-for="tag in tags" :key="tag">{{ tag }}</p>
       <Button :blue="true" name="Submit" />
     </form>
+    <div>{{ title }},{{ body }},{{ tags }}</div>
   </div>
 </template>
 
@@ -37,8 +38,10 @@ import { ref } from "vue";
 import Input from "../components/input.vue";
 import TagsInput from "../components/TagsInput";
 import Button from "../components/Button";
-import axios from "axios";
+
 import { useRouter } from "vue-router";
+import { projectFirestore, timestamp } from "../firebase/config";
+
 export default {
   components: {
     Input,
@@ -47,33 +50,24 @@ export default {
   },
   setup() {
     const title = ref("");
-    const postBody = ref("");
+    const body = ref("");
     const tags = ref([]);
     const router = useRouter();
+
     const updateTags = (e) => {
       tags.value.push(e);
     };
-    const handleSubmit = () => {
-      axios
-        .post("http://localhost:3000/posts", {
-          title: title.value,
-          body: postBody.value,
-          tags: tags.value,
-        })
-        .then(function(response) {
-          console.log(response);
-        })
-        .catch(function(error) {
-          console.log(error);
-        })
-        .finally(() => {
-          console.log("hell");
-          router.push({ name: "Home" });
-        });
+    const handleSubmit = async () => {
+      const post = {
+        title: title.value,
+        body: body.value,
+        tags: tags.value,
+        createdAt: timestamp(),
+      };
+      const res = await projectFirestore.collection("articles").add(post);
+      router.push({ name: "Home" });
     };
-    return { title, postBody, tags, updateTags, handleSubmit };
+    return { title, body, tags, updateTags, handleSubmit };
   },
 };
 </script>
-
-<style></style>
